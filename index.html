@@ -304,6 +304,19 @@ html.is-presenting body{overflow:hidden}
 @keyframes slideNext{from{opacity:0;transform:translateX(48px)}to{opacity:1;transform:none}}
 @keyframes slidePrev{from{opacity:0;transform:translateX(-48px)}to{opacity:1;transform:none}}
 
+/* ---------- Passwort-Dialog ---------- */
+.pw-dialog{width:min(400px,calc(100vw - 32px));padding:0;border:1.5px solid var(--rule);border-radius:var(--r-lg);background:var(--paper-raised);color:var(--ink);box-shadow:var(--shadow-md)}
+.pw-dialog::backdrop{background:rgba(16,18,21,.55)}
+.pw-dialog form{display:grid;gap:10px;padding:22px}
+.pw-dialog h2{font-size:1.5rem}
+.pw-sub{color:var(--ink-soft);font-size:.95rem}
+.pw-dialog label{font-weight:600;margin-top:4px}
+.pw-dialog input{min-height:46px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--ink-mute);background:var(--paper);color:var(--ink);font:inherit}
+.pw-dialog input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.pw-error{min-height:1.3em;color:var(--bad);font-weight:600;font-size:.92rem}
+.pw-actions{display:flex;justify-content:flex-end;gap:8px}
+.dl-clear-armed{color:var(--bad)!important;font-weight:700!important}
+
 /* ---------- Fußzeile ---------- */
 .site-footer{padding-block:40px 64px;border-top:1px solid var(--rule);color:var(--ink-mute);font-size:.9rem}
 .site-footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between}
@@ -854,7 +867,6 @@ legend{padding:0;margin-bottom:10px}
           <li><span class="n">3</span>Handeln</li>
         </ol>
         <div class="hero-actions" style="--d:5">
-          <button class="btn btn-primary" type="button" data-present>Vortragsmodus starten <kbd>P</kbd></button>
           <a class="btn btn-outline" href="#warum">Zum ersten Kapitel
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1377,7 +1389,7 @@ legend{padding:0;margin-bottom:10px}
         <div class="dl-foot">
           <p class="hint" id="dlHint">Gespeichert wird nur in diesem Browser, für diese Sitzung. Jede weitere Auswahl zählt als neue Stimme – praktisch für eine Abstimmung in der Klasse.</p>
           <div class="toolbar">
-            <button class="link-btn" type="button" id="dlClear">Ergebnisse löschen</button>
+            <button class="link-btn" type="button" id="dlClear" hidden>Alle Stimmen löschen</button>
             <button class="btn btn-outline btn-sm" type="button" id="dlNext">Nächstes Szenario</button>
           </div>
         </div>
@@ -1652,6 +1664,20 @@ legend{padding:0;margin-bottom:10px}
   </dl>
 </section>
 
+<dialog class="pw-dialog" id="pwDialog" aria-labelledby="pwTitle">
+  <form id="pwForm" novalidate>
+    <h2 id="pwTitle">Vortragsmodus</h2>
+    <p class="pw-sub">Nur für Vortragende: Bitte das Passwort eingeben.</p>
+    <label for="pwInput">Passwort</label>
+    <input type="password" id="pwInput" autocomplete="current-password">
+    <p class="pw-error" id="pwError" role="alert"></p>
+    <div class="pw-actions">
+      <button type="button" class="btn btn-quiet" id="pwCancel">Abbrechen</button>
+      <button type="submit" class="btn btn-primary">Starten</button>
+    </div>
+  </form>
+</dialog>
+
 <div class="sr-only" aria-live="polite" id="announcer"></div>
 
 <script>
@@ -1672,6 +1698,10 @@ const firebaseConfig = {
   appId: '1:1047336194176:web:8ef14148b83bf1b7269665',
   measurementId: 'G-82KB43X1VW',
 };
+
+/* Passwort für den Vortragsmodus. Gespeichert ist nur der SHA-256-Hash.
+   Hinweis: Das ist eine einfache Sperre im Browser, kein echter Schutz. */
+const ADMIN_PASSWORD_SHA256 = '62d3c044f4aa4b67d224563fdd3eacd6c22ac168b8e256ab78cfdbaefd81e676';
 
 /* ================= Werkzeuge ================= */
 const $ = (s, r = document) => r.querySelector(s);
@@ -1917,7 +1947,29 @@ function toggleHelp(force) {
   keyHelp.hidden = !open;
   helpBtn.setAttribute('aria-expanded', String(open));
 }
-$$('[data-present]').forEach(b => b.addEventListener('click', () => enterPresent()));
+const pwDialog = $('#pwDialog'), pwInput = $('#pwInput'), pwError = $('#pwError');
+let unlocked = store.get('af-admin', true) === '1';
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2, '0')).join('');
+}
+function askPresent() {
+  if (unlocked || !ADMIN_PASSWORD_SHA256) { enterPresent(); return; }
+  pwInput.value = ''; pwError.textContent = '';
+  if (typeof pwDialog.showModal === 'function') pwDialog.showModal(); else pwDialog.setAttribute('open', '');
+  pwInput.focus();
+}
+$('#pwForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  let ok = false;
+  try { ok = (await sha256(pwInput.value)) === ADMIN_PASSWORD_SHA256; } catch (err) { ok = false; }
+  if (!ok) { pwError.textContent = 'Falsches Passwort.'; pwInput.select(); return; }
+  unlocked = true; store.set('af-admin', '1', true);
+  pwDialog.close();
+  enterPresent();
+});
+$('#pwCancel').addEventListener('click', () => pwDialog.close());
+$$('[data-present]').forEach(b => b.addEventListener('click', askPresent));
 $('#prevBtn').addEventListener('click', () => showChapter(currentIdx - 1, -1));
 $('#nextBtn').addEventListener('click', () => showChapter(currentIdx + 1, 1));
 $('#exitBtn').addEventListener('click', exitPresent);
@@ -1930,7 +1982,7 @@ const ownsArrows = t => t && t.closest && t.closest('input, textarea, select, [c
 document.addEventListener('keydown', e => {
   if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
   const t = e.target;
-  if ((e.key === 'p' || e.key === 'P') && !isTextField(t)) { e.preventDefault(); presenting ? exitPresent() : enterPresent(); return; }
+  if ((e.key === 'p' || e.key === 'P') && !isTextField(t)) { e.preventDefault(); presenting ? exitPresent() : askPresent(); return; }
   if ((e.key === 'h' || e.key === 'H' || e.key === '?') && !isTextField(t)) { e.preventDefault(); toggleHelp(); return; }
   if (e.key === 'Escape') {
     if (!keyHelp.hidden) { toggleHelp(false); return; }
@@ -3252,11 +3304,13 @@ $$('.motive-flip').forEach(btn => {
   const DOC = `projects/${FS.projectId}/databases/(default)/documents/dilemma/votes`;
   const FS_BASE = 'https://firestore.googleapis.com/v1/';
   const MINE_KEY = 'af-dilemma-mine';
-  let online = true, lastSig = '';
+  let online = true, lastSig = '', myRound = '0';
   if (shared) {
     votes = blank();
-    try { const m = JSON.parse(store.get(MINE_KEY)); if (Array.isArray(m) && m.length === SCEN.length) m.forEach((v, i) => { mine[i] = Number.isInteger(v) ? v : -1; }); } catch (e) { /* nichts gespeichert */ }
-    $('#dlClear').hidden = true;
+    try {
+      const st = JSON.parse(store.get(MINE_KEY));
+      if (st && Array.isArray(st.m) && st.m.length === SCEN.length) { myRound = String(st.r); st.m.forEach((v, i) => { mine[i] = Number.isInteger(v) ? v : -1; }); }
+    } catch (e) { /* nichts gespeichert */ }
     $('#dlResult').setAttribute('aria-live', 'off');
     $('#dlHint').textContent = 'Gemeinsame Abstimmung: Alle Geräte zählen zusammen. Pro Gerät gibt es eine Stimme je Szenario – eine neue Wahl ersetzt die alte.';
   }
@@ -3265,11 +3319,20 @@ $$('.motive-flip').forEach(btn => {
       const r = await fetch(`${FS_BASE}${DOC}?key=${FS.apiKey}`, { cache: 'no-store' });
       if (!r.ok && r.status !== 404) throw new Error(String(r.status));
       const f = r.status === 404 ? {} : ((await r.json()).fields || {});
+      const round = f.round ? String(f.round.integerValue) : '0';
+      if (round !== myRound) { myRound = round; mine.fill(-1); saveMine(); render(); }
       votes = SCEN.map((sc, i) => sc.opts.map((_, k) => { const v = f[`s${i}_o${k}`]; return Math.max(0, Number(v ? (v.integerValue ?? v.doubleValue) : 0) || 0); }));
       online = true;
     } catch (e) { online = false; }
     const sig = JSON.stringify(votes) + online;
     if (sig !== lastSig) { lastSig = sig; renderResult(); }
+  }
+  function saveMine() { store.set(MINE_KEY, JSON.stringify({ r: myRound, m: mine })); }
+  async function resetShared() {
+    const fields = { round: { integerValue: String(Date.now()) } };
+    SCEN.forEach((sc, i) => sc.opts.forEach((_, k) => { fields[`s${i}_o${k}`] = { integerValue: '0' }; }));
+    const r = await fetch(`${FS_BASE}projects/${FS.projectId}/databases/(default)/documents:commit?key=${FS.apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ writes: [{ update: { name: DOC, fields } }] }) });
+    if (!r.ok) throw new Error(String(r.status));
   }
   async function push(i, k, delta) {
     const body = { writes: [{ update: { name: DOC, fields: {} }, updateMask: { fieldPaths: [] }, updateTransforms: [{ fieldPath: `s${i}_o${k}`, increment: { integerValue: String(delta) } }] }] };
@@ -3290,19 +3353,39 @@ $$('.motive-flip').forEach(btn => {
     votes[i][k]++;
     if (shared && prev >= 0) votes[i][prev] = Math.max(0, votes[i][prev] - 1);
     mine[i] = k;
-    if (shared) store.set(MINE_KEY, JSON.stringify(mine)); else store.set(KEY, JSON.stringify(votes), true);
+    if (shared) saveMine(); else store.set(KEY, JSON.stringify(votes), true);
     render();
     $(`.dl-opt[data-k="${k}"]`).focus();
     const total = votes[i].reduce((a, c) => a + c, 0);
     announce(`Stimme gezählt. ` + SCEN[i].opts.map((o, j) => `${o.b} ${pct(votes[i][j], total)} Prozent`).join(', '));
     if (shared) {
-      try { await push(i, k, 1); if (prev >= 0) await push(i, prev, -1); } catch (err) { online = false; renderResult(); }
+      try { await push(i, k, 1); if (prev >= 0 && votes[i][prev] >= 0) await push(i, prev, -1); } catch (err) { online = false; renderResult(); }
       pull();
     }
   });
   $$('.dl-tabs button').forEach(b => b.addEventListener('click', () => { cur = +b.dataset.s; render(); }));
   $('#dlNext').addEventListener('click', () => { cur = (cur + 1) % SCEN.length; render(); });
-  $('#dlClear').addEventListener('click', () => { votes = blank(); mine.fill(-1); store.set(KEY, JSON.stringify(votes), true); render(); announce('Ergebnisse gelöscht.'); });
+  /* „Alle Stimmen löschen“ gibt es nur im Vortragsmodus, mit Sicherheitsabfrage */
+  const clearBtn = $('#dlClear');
+  let armTimer = 0;
+  const disarm = () => { clearTimeout(armTimer); clearBtn.dataset.armed = ''; clearBtn.textContent = 'Alle Stimmen löschen'; clearBtn.classList.remove('dl-clear-armed'); };
+  const syncClear = () => { clearBtn.hidden = !root.classList.contains('is-presenting'); disarm(); };
+  document.addEventListener('presentchange', syncClear);
+  syncClear();
+  clearBtn.addEventListener('click', async () => {
+    if (!clearBtn.dataset.armed) {
+      clearBtn.dataset.armed = '1'; clearBtn.textContent = 'Wirklich alle Stimmen löschen?'; clearBtn.classList.add('dl-clear-armed');
+      armTimer = setTimeout(disarm, 4000);
+      return;
+    }
+    disarm();
+    votes = blank(); mine.fill(-1);
+    if (shared) {
+      try { await resetShared(); announce('Alle Stimmen gelöscht.'); } catch (e) { online = false; announce('Löschen fehlgeschlagen.'); }
+      await pull();
+    } else { store.set(KEY, JSON.stringify(votes), true); announce('Alle Stimmen gelöscht.'); }
+    render();
+  });
   render();
 })();
 
