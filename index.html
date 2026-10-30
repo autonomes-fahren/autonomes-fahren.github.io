@@ -1,4 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Autonomes Fahren</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Interaktiver Informatik-Vortrag: Wie sieht, denkt und entscheidet ein selbstfahrendes Auto? Mit Stufen-Regler, Sensor-Labor, A*-Planung, Brems-Simulation, Dilemma-Szenarien und Quiz.">
@@ -798,6 +802,8 @@ legend{padding:0;margin-bottom:10px}
   .js .reveal{opacity:1;transform:none}
 }
 </style>
+</head>
+<body>
 <a class="skip-link" href="#main">Zum Inhalt springen</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 2.8 22.4 20.6H1.6Z" fill="#FBFAF6" stroke="#C8102E" stroke-width="2.6" stroke-linejoin="round"/><path d="M12 9.2v5.2" stroke="#15171A" stroke-width="2.3" stroke-linecap="round"/><circle cx="12" cy="17.3" r="1.35" fill="#15171A"/></symbol>
@@ -1653,12 +1659,19 @@ legend{padding:0;margin-bottom:10px}
 'use strict';
 
 /* =====================================================================
-   GEMEINSAME ABSTIMMUNG (Kapitel 7, Dilemma)
-   Leer lassen: Jedes Gerät zählt nur für sich (ohne Server).
-   Mit Firebase: Hier die URL deiner Realtime Database eintragen, z. B.
-   'https://dein-projekt-default-rtdb.europe-west1.firebasedatabase.app'
+   GEMEINSAME ABSTIMMUNG (Kapitel 7, Dilemma) über Firebase Firestore
+   Gebraucht werden nur apiKey und projectId. Ohne diese Werte zählt
+   jedes Gerät nur für sich (ohne Server).
    ===================================================================== */
-const FIREBASE_DB_URL = '';
+const firebaseConfig = {
+  apiKey: 'AIzaSyAvt7Vi4h71JTmVpu4DwWkq-iLgPFuzv6Q',
+  authDomain: 'informatik-5c22f.firebaseapp.com',
+  projectId: 'informatik-5c22f',
+  storageBucket: 'informatik-5c22f.firebasestorage.app',
+  messagingSenderId: '1047336194176',
+  appId: '1:1047336194176:web:8ef14148b83bf1b7269665',
+  measurementId: 'G-82KB43X1VW',
+};
 
 /* ================= Werkzeuge ================= */
 const $ = (s, r = document) => r.querySelector(s);
@@ -3232,9 +3245,12 @@ $$('.motive-flip').forEach(btn => {
         <p class="dl-insight">${sc.insight}</p>`;
     }
   }
-  /* Gemeinsame Abstimmung über die Firebase Realtime Database (REST, ohne Bibliothek) */
-  const shared = /^https:\/\//.test(FIREBASE_DB_URL);
-  const dbUrl = path => `${FIREBASE_DB_URL.replace(/\/+$/, '')}/dilemma${path}.json`;
+  /* Gemeinsame Abstimmung über Firebase Firestore (REST, ohne Bibliothek).
+     Alle Zähler liegen in einem Dokument: dilemma/votes mit Feldern s0_o0, s0_o1, … */
+  const FS = firebaseConfig || {};
+  const shared = Boolean(FS.apiKey && FS.projectId);
+  const DOC = `projects/${FS.projectId}/databases/(default)/documents/dilemma/votes`;
+  const FS_BASE = 'https://firestore.googleapis.com/v1/';
   const MINE_KEY = 'af-dilemma-mine';
   let online = true, lastSig = '';
   if (shared) {
@@ -3246,17 +3262,18 @@ $$('.motive-flip').forEach(btn => {
   }
   async function pull() {
     try {
-      const r = await fetch(dbUrl(''), { cache: 'no-store' });
-      if (!r.ok) throw new Error(String(r.status));
-      const d = (await r.json()) || {};
-      votes = SCEN.map((sc, i) => sc.opts.map((_, k) => Math.max(0, Number((d[`s${i}`] || {})[`o${k}`]) || 0)));
+      const r = await fetch(`${FS_BASE}${DOC}?key=${FS.apiKey}`, { cache: 'no-store' });
+      if (!r.ok && r.status !== 404) throw new Error(String(r.status));
+      const f = r.status === 404 ? {} : ((await r.json()).fields || {});
+      votes = SCEN.map((sc, i) => sc.opts.map((_, k) => { const v = f[`s${i}_o${k}`]; return Math.max(0, Number(v ? (v.integerValue ?? v.doubleValue) : 0) || 0); }));
       online = true;
     } catch (e) { online = false; }
     const sig = JSON.stringify(votes) + online;
     if (sig !== lastSig) { lastSig = sig; renderResult(); }
   }
   async function push(i, k, delta) {
-    const r = await fetch(dbUrl(`/s${i}/o${k}`), { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ '.sv': { increment: delta } }) });
+    const body = { writes: [{ update: { name: DOC, fields: {} }, updateMask: { fieldPaths: [] }, updateTransforms: [{ fieldPath: `s${i}_o${k}`, increment: { integerValue: String(delta) } }] }] };
+    const r = await fetch(`${FS_BASE}projects/${FS.projectId}/databases/(default)/documents:commit?key=${FS.apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     if (!r.ok) throw new Error(String(r.status));
   }
   if (shared) {
@@ -3374,5 +3391,5 @@ $$('.motive-flip').forEach(btn => {
 
 })();
 </script>
-
-</body></html>
+</body>
+</html>
