@@ -732,6 +732,12 @@ legend{padding:0;margin-bottom:10px}
 @keyframes drawArrow{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .dl-svg .d-equal{opacity:0;transition:opacity .4s}
+.dl-svg .d-tile{transition:opacity .4s}
+.dl-svg .d-tile-box{fill:#FBFAF6;stroke:#15171A;stroke-width:1.5;transition:stroke .3s,stroke-width .3s}
+.dl-svg .d-tile-txt{fill:var(--ink);font:600 10px var(--font-mono);letter-spacing:.06em}
+.dl-svg.has-choice .d-tile{opacity:.3}
+.dl-svg .d-tile.chosen{opacity:1}
+.dl-svg .d-tile.chosen .d-tile-box{stroke:var(--c);stroke-width:5}
 .dl-svg.equal .d-equal{opacity:1}
 .dl-side{display:grid;gap:14px;align-content:start;min-width:0}
 .dl-side h3{font-size:clamp(1.4rem,1.1rem + 1vw,1.9rem)}
@@ -1407,12 +1413,8 @@ legend{padding:0;margin-bottom:10px}
     <div class="dilemma">
       <div class="panel dl-stage reveal" id="dlStage">
         <div class="dl-top">
-          <p class="kicker">Szenario <span id="dlNum">1</span> von 3</p>
-          <ol class="dl-tabs" aria-label="Szenario wählen">
-            <li><button type="button" data-s="0" aria-label="Szenario 1">1</button></li>
-            <li><button type="button" data-s="1" aria-label="Szenario 2">2</button></li>
-            <li><button type="button" data-s="2" aria-label="Szenario 3">3</button></li>
-          </ol>
+          <p class="kicker">Szenario <span id="dlNum">1</span> von <span id="dlTotal">5</span></p>
+          <ol class="dl-tabs" aria-label="Szenario wählen"></ol>
         </div>
         <div class="dl-body">
           <svg class="dl-svg" id="dlSvg" viewBox="0 0 320 260" role="img" aria-labelledby="dlSvgTitle"><title id="dlSvgTitle"></title><g id="dlScene"></g></svg>
@@ -1599,7 +1601,7 @@ legend{padding:0;margin-bottom:10px}
   <div class="wrap">
     <header class="chapter-head reveal">
       <div class="chapter-tag"><span class="diamond" aria-hidden="true"><span>09</span></span><p class="kicker">Wissen testen</p></div>
-      <h2 id="h-quiz">Die kleine Fahrprüfung</h2>
+      <h2 id="h-quiz">Teste dein Wissen</h2>
       <p class="lead">Fünf Fragen zum Vortrag. Du siehst sofort, ob deine Antwort stimmt – und warum.</p>
     </header>
     <div class="quiz reveal">
@@ -3241,47 +3243,52 @@ $$('.motive-flip').forEach(btn => {
   if (!stage) return;
   const OPT_COL = [['var(--blue)', 'var(--on-blue)'], ['var(--orange)', '#1D2024'], ['var(--signal)', 'var(--on-signal)']];
   const L = 124, R = 196;
-  const SCEN = [
-    { title: 'Mensch oder Sachschaden?', text: 'Eine Person betritt plötzlich die Fahrbahn. Anhalten ist nicht mehr möglich. Auf der Nachbarspur steht eine leere Absperrung.',
-      car: R, own: [['person', R]], other: [['barrier', L]],
-      opts: [{ b: 'Ausweichen', s: 'Die Absperrung wird beschädigt.', a: 'swerve' }, { b: 'Spur halten', s: 'Die Person ist in Gefahr.', a: 'straight' }],
-      insight: '<strong>Ethik-Kommission (2017):</strong> Menschenleben haben Vorrang vor Sachschäden. Bei dieser Frage sind sich die meisten einig.' },
-    { title: 'Eine Person oder zwei?', text: 'Auf der eigenen Spur stehen zwei Personen, auf der Nachbarspur eine. Anhalten ist nicht mehr möglich.',
-      car: R, own: [['person', R - 17], ['person', R + 17]], other: [['person', L]],
-      opts: [{ b: 'Spur halten', s: 'Zwei Personen sind in Gefahr.', a: 'straight' }, { b: 'Ausweichen', s: 'Eine Person ist in Gefahr.', a: 'swerve' }],
-      insight: 'Das ist das klassische <strong>Trolley-Problem</strong>. Ob man Menschenleben gegeneinander aufrechnen darf, ist umstritten – eine einfache Antwort gibt es nicht.' },
-    { title: 'Darf das Alter zählen?', text: 'Links steht ein älterer Mensch, rechts ein Kind. Das Auto kann nicht mehr anhalten. Soll es bei seiner Entscheidung das Alter berücksichtigen?',
-      car: 160, own: [['child', R]], other: [['older', L]],
-      opts: [{ b: 'Ja, das Kind schützen', s: 'Das Auto lenkt nach links.', a: 'left' }, { b: 'Ja, den älteren Menschen schützen', s: 'Das Auto lenkt nach rechts.', a: 'right' }, { b: 'Nein, das Alter darf nicht zählen', s: 'Keine Bewertung nach persönlichen Merkmalen.', a: null }],
-      insight: '<strong>Ethik-Kommission (2017):</strong> Eine Bewertung nach persönlichen Merkmalen wie Alter oder Geschlecht ist untersagt. In der <strong>Moral Machine</strong> wollten dagegen viele Teilnehmende eher junge Menschen schonen.' },
-  ];
   const FIG = {
     person: '<circle cx="12" cy="4.6" r="2.5" fill="#fff"/><path d="M12 8.3v7M12 15.3l-3.2 6M12 15.3l3.2 6M7.6 12.6 12 9.2l4.4 3.4"/>',
-    child: '<g transform="translate(2.8 5) scale(.77)"><circle cx="12" cy="4.6" r="2.7" fill="#fff"/><path d="M12 8.3v7M12 15.3l-3.2 6M12 15.3l3.2 6M7.6 12.6 12 9.2l4.4 3.4"/></g>',
-    older: '<circle cx="10.6" cy="4.8" r="2.5" fill="#fff"/><path d="M10.8 8.4l1 6.8M11.8 15.2l-2.9 6M11.8 15.2l2.8 6M7 12.8l4.2-3.3 4.6 3M16.8 12.4v9"/>',
+    bike: '<circle cx="6" cy="16.5" r="4" /><circle cx="18" cy="16.5" r="4"/><path d="M6 16.5 9.5 9h6.5l2 7.5M9.5 9l3.5 7.5M14.5 5.5h3"/><circle cx="12.5" cy="4" r="1.8" fill="#fff"/>',
   };
-  const signAt = (kind, x, y) => kind === 'barrier'
-    ? `<g transform="translate(${x - 30} ${y - 14})"><rect x="4" y="16" width="4" height="14" fill="#3A3F46"/><rect x="52" y="16" width="4" height="14" fill="#3A3F46"/><rect width="60" height="17" rx="3" fill="#FBFAF6" stroke="#15171A" stroke-width="1.2"/>${[0, 1, 2, 3, 4].map(j => `<path d="M${6 + j * 12} 1h6l-5 15h-6z" fill="#C8102E"/>`).join('')}</g>`
-    : `<g transform="translate(${x - 17} ${y - 17})"><rect width="34" height="34" rx="5" fill="#FBFAF6"/><rect x="2.5" y="2.5" width="29" height="29" rx="3.5" fill="#0E5A9E"/><g transform="translate(5 5)" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${FIG[kind]}</g></g>`;
-  const arrowPath = (a, cx) => {
-    const tx = a === 'straight' ? cx : a === 'swerve' ? L : a === 'left' ? L : R;
-    const d = tx === cx ? `M${cx} 186V116` : `M${cx} 186C${cx} 150 ${tx} 154 ${tx} 116`;
-    return { d, tx };
+  const ICON = {
+    factory: '<path d="M3 21V10.5l5 3v-3l5 3v-3l5 3V4h3v17Z"/><path d="M7 17h2M12 17h2"/>',
+    state: '<path d="M3 9.5 12 4l9 5.5M5.5 10v8M10 10v8M14 10v8M18.5 10v8M3 21h18"/>',
+    buyer: '<circle cx="12" cy="7" r="3.2"/><path d="M5.5 21v-2.2a6.5 6.5 0 0 1 13 0V21"/>',
+    noWheel: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.2"/><path d="M12 14.2V20.5M9.9 11.3 3.8 9.6M14.1 11.3l6.1-1.7"/><path d="M4.5 4.5l15 15" stroke="#C8102E" stroke-width="2.6"/>',
+    flag: '<path d="M5 21.5V3.5"/><path d="M5 4h14v9H5"/><path d="M5 4h4.7v3H5zM14.3 4H19v3h-4.7zM9.7 7h4.6v3H9.7zM5 10h4.7v3H5zM14.3 10H19v3h-4.7z" fill="#15171A" stroke="none"/>',
+    free: '<circle cx="12" cy="6.5" r="3"/><path d="M6.5 20.5v-2a5.5 5.5 0 0 1 11 0v2"/><path d="M2.5 13.5l2.5-2.5 2.5 2.5M21.5 13.5 19 11l-2.5 2.5"/>',
   };
-  function sceneSVG(i, chosen) {
-    const sc = SCEN[i];
-    let s = '<rect class="d-ground" width="320" height="260"/><rect class="d-road" x="88" width="144" height="260"/><path class="d-edge" d="M95 0v260M225 0v260"/><path class="d-lane" d="M160 -6v272"/>';
-    sc.opts.forEach((o, k) => {
-      if (!o.a) return;
-      const { d, tx } = arrowPath(o.a, sc.car);
-      s += `<g class="d-arrow${chosen === k ? ' chosen' : ''}" style="--c:${OPT_COL[k][0]}"><path d="${d}" pathLength="1"/><polygon points="${tx - 8},122 ${tx},107 ${tx + 8},122"/></g>`;
-    });
-    sc.own.concat(sc.other).forEach(([kind, x]) => { s += signAt(kind, x, 78); });
-    s += `<g transform="translate(${sc.car - 16} 196)"><rect width="32" height="50" rx="9" fill="#FFD23F" stroke="#15171A" stroke-width="1.2"/><path d="M5 13q11-6 22 0l-2 8q-9-4-18 0z" fill="#1C2128"/><rect x="7" y="38" width="18" height="5" rx="2" fill="#1C2128" opacity=".8"/></g>`;
-    s += '<g class="d-equal"><rect x="70" y="20" width="180" height="26" rx="6" fill="#15171A"/><text x="160" y="37.5" text-anchor="middle" fill="#FFD23F" style="font:600 11px var(--font-mono)">KEINE BEWERTUNG NACH ALTER</text></g>';
-    return s;
-  }
-  const KEY = 'af-dilemma-v1';
+  const ground = '<rect class="d-ground" width="320" height="260"/>';
+  const road = solid => `<rect class="d-road" x="88" width="144" height="260"/><path class="d-edge" d="M95 0v260M225 0v260"/>${solid ? '<path d="M160 0v260" stroke="#EEEBE4" stroke-width="3"/>' : '<path class="d-lane" d="M160 -6v272"/>'}`;
+  const car = (x, y, col = '#FFD23F', me = false) => `<g transform="translate(${x - 16} ${y})"><rect width="32" height="50" rx="9" fill="${col}" stroke="#15171A" stroke-width="1.2"/><path d="M5 13q11-6 22 0l-2 8q-9-4-18 0z" fill="#1C2128"/><rect x="7" y="38" width="18" height="5" rx="2" fill="#1C2128" opacity=".8"/></g>${me ? `<g transform="translate(${x + 20} ${y + 16})"><rect width="30" height="18" rx="4" fill="#15171A"/><text x="15" y="12.5" text-anchor="middle" fill="#FFD23F" style="font:700 10px var(--font-mono)">DU</text></g>` : ''}`;
+  const bus = (x, y, rot) => `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-21" y="-46" width="42" height="92" rx="8" fill="#DCD6CA" stroke="#15171A" stroke-width="1.2"/><path d="M-15 30q15 7 30 0l-2-8q-13 5-26 0z" fill="#1C2128"/>${[-30, -16, -2, 12].map(yy => `<circle cx="-8" cy="${yy}" r="3.4" fill="#5E6E86"/><circle cx="8" cy="${yy}" r="3.4" fill="#5E6E86"/>`).join('')}</g><g transform="translate(${x - 52} ${y - 60})"><rect width="44" height="18" rx="4" fill="#15171A"/><text x="22" y="12.5" text-anchor="middle" fill="#EEEBE4" style="font:700 10px var(--font-mono)">10 P.</text></g>`;
+  const rail = (x, y, w, h) => `<g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="#B9C0C8" stroke="#15171A" stroke-width="1"/>${w > h ? [0.15, 0.5, 0.85].map(f => `<rect x="${x + w * f - 2}" y="${y + h}" width="4" height="8" fill="#3A3F46"/>`).join('') : ''}</g>`;
+  const sign = (kind, x, y) => `<g transform="translate(${x - 17} ${y - 17})"><rect width="34" height="34" rx="5" fill="#FBFAF6"/><rect x="2.5" y="2.5" width="29" height="29" rx="3.5" fill="#0E5A9E"/><g transform="translate(5 5)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${FIG[kind]}</g></g>`;
+  const arrow = (k, chosen, d, tx, ty) => `<g class="d-arrow${chosen === k ? ' chosen' : ''}" style="--c:${OPT_COL[k][0]}"><path d="${d}" pathLength="1"/><polygon points="${tx - 8},${ty + 15} ${tx},${ty} ${tx + 8},${ty + 15}"/></g>`;
+  const note = text => `<g class="d-equal"><rect x="60" y="14" width="200" height="26" rx="6" fill="#15171A"/><text x="160" y="31.5" text-anchor="middle" fill="#FFD23F" style="font:600 11px var(--font-mono)">${text}</text></g>`;
+  const tiles = (icons, labels, chosen) => ground + icons.map((ic, k) => `<g class="d-tile${chosen === k ? ' chosen' : ''}" style="--c:${OPT_COL[k][0]}"><rect class="d-tile-box" x="${18 + k * 98}" y="62" width="88" height="88" rx="12"/><g transform="translate(${18 + k * 98 + 20} 82) scale(2)" fill="none" stroke="#15171A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[ic]}</g><text class="d-tile-txt" x="${62 + k * 98}" y="176" text-anchor="middle">${labels[k]}</text></g>`).join('');
+
+  const SCEN = [
+    { title: 'Du oder die anderen?', text: 'Du sitzt im Auto. Eine Person läuft plötzlich auf die Fahrbahn. Ausweichen geht nur gegen eine Leitplanke – dann bist du selbst in Gefahr.',
+      opts: [{ b: 'Ausweichen', s: 'Ich gehe das Risiko selbst ein.', a: 1 }, { b: 'Spur halten', s: 'Das Auto soll seine Insassen schützen.', a: 1 }, { b: 'Selbst einstellen', s: 'Das soll jeder beim Kauf festlegen können.', a: null }],
+      scene: c => ground + road(false) + arrow(0, c, `M${R} 186C${R} 150 ${L} 154 ${L} 122`, L, 108) + arrow(1, c, `M${R} 186V122`, R, 108) + rail(98, 78, 56, 10) + sign('person', R, 80) + car(R, 196, '#FFD23F', true) + note('JEDER STELLT SELBST EIN'),
+      insight: '<strong>Ein bekanntes Spannungsfeld:</strong> Viele finden es richtig, dass ein Auto zum Schutz anderer ausweicht. Kaufen würden sie aber lieber eines, das sie selbst schützt. Das zeigte 2016 eine Studie in der Fachzeitschrift Science.' },
+    { title: 'Darf das Auto Regeln brechen?', text: 'Ein Radfahrer fährt langsam vor dem Auto. Überholen geht nur über eine durchgezogene Linie. Die Gegenspur ist frei.',
+      opts: [{ b: 'Überholen', s: 'Mit genug Abstand ist das sicher.', a: 1 }, { b: 'Hinterherfahren', s: 'Regel ist Regel – auch wenn es 5 Minuten dauert.', a: 1 }, { b: 'Nur mit Erlaubnis', s: 'Die Person im Auto muss zustimmen.', a: null }],
+      scene: c => ground + road(true) + arrow(0, c, `M${R} 186C${R} 168 ${L} 172 ${L} 140V82C${L} 58 ${R} 64 ${R} 44`, R, 30) + arrow(1, c, `M${R} 186V150`, R, 136) + sign('bike', R, 112) + car(R, 196) + note('NUR MIT ERLAUBNIS'),
+      insight: 'Menschen überholen in solchen Lagen oft trotzdem. Einem selbstfahrenden Auto muss vorher jemand festlegen, ob es Regeln immer strikt befolgt – oder wann eine Ausnahme erlaubt ist.' },
+    { title: 'Wer legt die Moral fest?', text: 'Irgendwer muss festlegen, wie ein selbstfahrendes Auto in Notlagen entscheidet. Wer sollte das sein?',
+      opts: [{ b: 'Die Hersteller', s: 'Sie kennen die Technik am besten.', a: 'tile' }, { b: 'Der Staat', s: 'Per Gesetz, gleich für alle.', a: 'tile' }, { b: 'Jeder Käufer', s: 'Für sein eigenes Auto.', a: 'tile' }],
+      scene: c => tiles(['factory', 'state', 'buyer'], ['HERSTELLER', 'STAAT', 'KÄUFER'], c),
+      insight: '<strong>Ethik-Kommission (2017):</strong> Sie hat Leitlinien aufgestellt, etwa Menschenleben vor Sachschäden und keine Bewertung nach Alter oder Geschlecht. Wer die Regeln im Detail festlegt, ist weiter offen.' },
+    { title: 'Viele gegen einen', text: 'Du sitzt allein in deinem Robotaxi. Ein entgegenkommender Kleinbus mit zehn Personen gerät auf deine Spur. Ein Zusammenstoß ist kaum zu vermeiden.',
+      opts: [{ b: 'Ausweichen', s: 'Mein Auto senkt das Risiko für den Bus – auch auf meine Kosten.', a: 1 }, { b: 'Mich schützen', s: 'Mein Auto soll zuerst mich schützen.', a: 1 }, { b: 'Nur bremsen', s: 'Beide Autos bremsen, keines wählt aus.', a: null }],
+      scene: c => ground + road(false) + rail(229, 60, 8, 120) + arrow(0, c, `M${R} 186C${R} 160 216 156 216 130`, 216, 116) + arrow(1, c, `M${R} 186V140`, R, 126) + bus(150, 78, -14) + car(R, 196, '#FFD23F', true) + note('BEIDE NUR BREMSEN'),
+      insight: 'Das Trolley-Problem – diesmal sitzt du selbst im Auto. Ob man Menschenleben gegeneinander aufrechnen darf, ist umstritten. Und es fühlt sich anders an, wenn man selbst betroffen ist.' },
+    { title: 'Menschen ab ans Steuer?', text: 'Angenommen, selbstfahrende Autos verursachen nachweislich deutlich weniger Unfälle als Menschen.',
+      opts: [{ b: 'Selbstfahren verbieten', s: 'Sicherheit geht vor.', a: 'tile' }, { b: 'Nur noch in bestimmten Bereichen', s: 'Zum Beispiel auf Rennstrecken.', a: 'tile' }, { b: 'Jeder entscheidet selbst', s: 'Freiheit geht vor.', a: 'tile' }],
+      scene: c => tiles(['noWheel', 'flag', 'free'], ['VERBOT', 'NUR BEREICHE', 'FREIE WAHL'], c),
+      insight: 'Eine Frage für die Zukunft: Sicherheit für alle gegen die Freiheit, selbst zu fahren. Darüber müsste die Gesellschaft gemeinsam entscheiden.' },
+  ];
+  function sceneSVG(i, chosen) { return SCEN[i].scene(chosen); }
+  const KEY = 'af-dilemma-v2';
   const blank = () => SCEN.map(sc => sc.opts.map(() => 0));
   let votes = (() => { try { const v = JSON.parse(store.get(KEY, true)); if (Array.isArray(v) && v.length === SCEN.length && v.every((r, i) => Array.isArray(r) && r.length === SCEN[i].opts.length)) return v; } catch (e) { /* ungültig */ } return blank(); })();
   const mine = SCEN.map(() => -1);
@@ -3302,6 +3309,7 @@ $$('.motive-flip').forEach(btn => {
     if (anim !== false) $('#dlScene').innerHTML = sceneSVG(cur, chosen);
     svg.classList.toggle('has-choice', chosen >= 0);
     svg.classList.toggle('equal', chosen >= 0 && !sc.opts[chosen].a);
+    $('#dlTotal').textContent = SCEN.length;
     $('#dlOptions').innerHTML = sc.opts.map((o, k) => `
       <button type="button" class="dl-opt" data-k="${k}" aria-pressed="${chosen === k}" style="--c:${OPT_COL[k][0]};--on-c:${OPT_COL[k][1]}">
         <span class="key" aria-hidden="true">${String.fromCharCode(65 + k)}</span><span class="lbl"><b>${o.b}</b><small>${o.s}</small></span>
@@ -3331,7 +3339,7 @@ $$('.motive-flip').forEach(btn => {
   const shared = Boolean(FS.apiKey && FS.projectId);
   const DOC = `projects/${FS.projectId}/databases/(default)/documents/dilemma/votes`;
   const FS_BASE = 'https://firestore.googleapis.com/v1/';
-  const MINE_KEY = 'af-dilemma-mine';
+  const MINE_KEY = 'af-dilemma-mine-v2';
   let online = true, lastSig = '', myRound = '0';
   if (shared) {
     votes = blank();
@@ -3391,6 +3399,7 @@ $$('.motive-flip').forEach(btn => {
       pull();
     }
   });
+  $('.dl-tabs').innerHTML = SCEN.map((_, i) => `<li><button type="button" data-s="${i}" aria-label="Szenario ${i + 1}">${i + 1}</button></li>`).join('');
   $$('.dl-tabs button').forEach(b => b.addEventListener('click', () => { cur = +b.dataset.s; render(); }));
   $('#dlNext').addEventListener('click', () => { cur = (cur + 1) % SCEN.length; render(); });
   /* „Alle Stimmen löschen“ gibt es nur im Vortragsmodus, mit Sicherheitsabfrage */
