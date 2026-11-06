@@ -313,6 +313,22 @@ html.is-presenting body{overflow:hidden}
 .qr-text{display:grid;gap:18px;min-width:0}
 .qr-url{font:600 clamp(1.1rem,.55rem + 2.1vw,2.3rem)/1.15 var(--font-mono);letter-spacing:-.02em;overflow-wrap:anywhere;padding:.35em .6em;justify-self:start;max-width:100%;background:var(--signal);color:var(--on-signal);border-radius:10px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.14)}
 
+/* ---------- Stichpunkte ---------- */
+.bullets{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.bullets li{position:relative;padding-left:18px;color:var(--ink-soft);font-size:.98rem;line-height:1.45}
+.bullets li::before{content:"";position:absolute;left:0;top:.66em;width:9px;height:3px;border-radius:1px;background:var(--signal-deep)}
+.motive .back .bullets li{color:var(--ink);font-size:1.02rem}
+.loop-step .bullets li{color:#3D4249;font-size:.95rem}
+.loop-step .bullets li::before{background:#D9A800}
+.chance .bullets li{color:#D3CEC4}
+.chance .bullets li::before{background:#FFD23F}
+.scard .bullets li{font-size:.93rem}
+.scard .how{margin-bottom:2px}
+.bullets.small li{font-size:.86rem;color:var(--ink-mute)}
+.bullets.assume li{font-size:.88rem}
+.takeaway .bullets{margin-top:12px;max-width:62ch}
+.takeaway .bullets li{font-size:1.05rem}
+
 /* ---------- Passwort-Dialog ---------- */
 .pw-dialog{width:min(400px,calc(100vw - 32px));padding:0;border:1.5px solid var(--rule);border-radius:var(--r-lg);background:var(--paper-raised);color:var(--ink);box-shadow:var(--shadow-md)}
 .pw-dialog::backdrop{background:rgba(16,18,21,.55)}
@@ -803,7 +819,7 @@ legend{padding:0;margin-bottom:10px}
 .takeaway h3{font:760 clamp(1.6rem,1.1rem + 2.2vw,3rem)/1.08 var(--font-display);letter-spacing:-.025em}
 .takeaway p{margin-top:10px;color:var(--ink-soft);max-width:62ch;font-size:1.05rem}
 .endgrid{display:grid;gap:18px;margin-top:clamp(40px,6vw,64px)}
-@media (min-width:900px){.endgrid{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}}
+
 .sources{padding:22px;display:grid;gap:14px}
 .sources ol{margin:0;padding-left:1.3em;display:grid;gap:12px}
 .sources li::marker{font-family:var(--font-mono);color:var(--ink-mute)}
@@ -945,11 +961,11 @@ legend{padding:0;margin-bottom:10px}
           <div class="motive-face front">
             <span class="motive-icon" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M14 3 5 6.5v6.8c0 5.6 3.8 10 9 11.7 5.2-1.7 9-6.1 9-11.7V6.5Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="m9.8 14.2 3 3 5.6-5.8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <h3>Sicherheit</h3>
-            <p>Ein System wird nicht müde, lässt sich nicht ablenken und trinkt keinen Alkohol. Es kann in alle Richtungen gleichzeitig beobachten.</p>
+            <ul class="bullets"><li>wird nicht müde, nicht abgelenkt</li><li>kein Alkohol am Steuer</li><li>beobachtet in alle Richtungen gleichzeitig</li></ul>
           </div>
           <div class="motive-face back" id="mb-1" inert>
             <p class="kicker">Die Kehrseite</p>
-            <p>Auch Technik macht Fehler – nur andere als Menschen. Zum Beispiel in Situationen, mit denen beim Entwickeln niemand gerechnet hat.</p>
+            <ul class="bullets"><li>auch Technik macht Fehler</li><li>vor allem in unerwarteten Situationen</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="mb-1"><span>Kehrseite zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -959,11 +975,11 @@ legend{padding:0;margin-bottom:10px}
           <div class="motive-face front">
             <span class="motive-icon" aria-hidden="true"><svg viewBox="0 0 28 28"><circle cx="9.5" cy="7.5" r="3" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="19" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M3.5 23v-4.2a6 6 0 0 1 12 0V23M15.8 15.6a5 5 0 0 1 8.2 3.9V23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
             <h3>Mobilität für alle</h3>
-            <p>Menschen, die nicht selbst fahren können – etwa wegen ihres Alters, einer Krankheit oder ohne Führerschein – könnten selbstständig unterwegs sein.</p>
+            <ul class="bullets"><li>für Menschen, die nicht selbst fahren können</li><li>z. B. Ältere, Kranke, Menschen ohne Führerschein</li></ul>
           </div>
           <div class="motive-face back" id="mb-2" inert>
             <p class="kicker">Die Kehrseite</p>
-            <p>Das gelingt nur, wenn solche Fahrzeuge bezahlbar sind und auch außerhalb großer Städte fahren.</p>
+            <ul class="bullets"><li>nur wenn die Fahrzeuge bezahlbar sind</li><li>auch auf dem Land, nicht nur in Großstädten</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="mb-2"><span>Kehrseite zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -973,11 +989,11 @@ legend{padding:0;margin-bottom:10px}
           <div class="motive-face front">
             <span class="motive-icon" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M4 19.5a10 10 0 1 1 20 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="m14 19.5 5.2-6.3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="14" cy="19.5" r="2" fill="currentColor"/><path d="M7.5 12.5l1.3 1M20.5 12.5l-1.3 1M14 9.5v1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
             <h3>Effizienz</h3>
-            <p>Gleichmäßiges, vorausschauendes Fahren und Autos, die untereinander Daten austauschen, könnten Staus verringern und Energie sparen.</p>
+            <ul class="bullets"><li>gleichmäßiges, vorausschauendes Fahren</li><li>Autos tauschen Daten aus</li><li>weniger Stau, weniger Energie</li></ul>
           </div>
           <div class="motive-face back" id="mb-3" inert>
             <p class="kicker">Die Kehrseite</p>
-            <p>Wenn Autofahren bequemer wird, könnte es auch mehr Verkehr geben.</p>
+            <ul class="bullets"><li>bequemeres Fahren kann mehr Verkehr erzeugen</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="mb-3"><span>Kehrseite zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -987,11 +1003,11 @@ legend{padding:0;margin-bottom:10px}
           <div class="motive-face front">
             <span class="motive-icon" aria-hidden="true"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M14 8.2V14l4 2.6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <h3>Zeitgewinn</h3>
-            <p>Wer nicht selbst fahren muss, kann die Fahrzeit anders nutzen: lesen, lernen, sich ausruhen.</p>
+            <ul class="bullets"><li>Fahrzeit anders nutzen</li><li>lesen, lernen, ausruhen</li></ul>
           </div>
           <div class="motive-face back" id="mb-4" inert>
             <p class="kicker">Die Kehrseite</p>
-            <p>Sich abwenden darf man erst ab Stufe 3 – und auch dann nur in bestimmten Situationen. Mehr dazu im nächsten Kapitel.</p>
+            <ul class="bullets"><li>abwenden erst ab Stufe 3 erlaubt</li><li>und nur in bestimmten Situationen</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="mb-4"><span>Kehrseite zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -1001,7 +1017,6 @@ legend{padding:0;margin-bottom:10px}
     <div class="fact reveal">
       <p class="kicker" style="color:#C9C4BA">Zum Motiv Sicherheit</p>
       <p class="fact-text">Die große Mehrheit der Unfälle geht auf menschliches Fehlverhalten zurück.</p>
-      <p class="tag-check" style="justify-self:start"><svg aria-hidden="true"><use href="#i-check"/></svg>Stand vor dem Vortrag prüfen</p>
     </div>
 
     <div class="loop reveal">
@@ -1010,9 +1025,9 @@ legend{padding:0;margin-bottom:10px}
       <div class="loop-track" data-anim>
         <div class="loop-road" aria-hidden="true"><i></i></div>
         <ol class="loop-steps">
-          <li class="loop-step" style="--c:var(--sens-cam)"><span class="loop-n">SCHRITT 1</span><h3>Wahrnehmen</h3><p>Sensoren messen die Umgebung. Daraus entsteht ein Bild: Wo ist die Straße, wo sind andere?</p><a href="#sensoren">Zum Sensor-Labor</a></li>
-          <li class="loop-step" style="--c:var(--signal)"><span class="loop-n">SCHRITT 2</span><h3>Planen</h3><p>Ein Algorithmus berechnet einen sicheren Weg und eine passende Geschwindigkeit.</p><a href="#planung">Zur A*-Planung</a></li>
-          <li class="loop-step" style="--c:var(--sens-radar)"><span class="loop-n">SCHRITT 3</span><h3>Handeln</h3><p>Lenkung, Gas und Bremse setzen den Plan um – und die Physik bestimmt, wie schnell das wirkt.</p><a href="#bremsen">Zur Brems-Simulation</a></li>
+          <li class="loop-step" style="--c:var(--sens-cam)"><span class="loop-n">SCHRITT 1</span><h3>Wahrnehmen</h3><ul class="bullets"><li>Sensoren erfassen die Umgebung</li><li>Wo ist die Straße, wo sind andere?</li></ul><a href="#sensoren">Zum Sensor-Labor</a></li>
+          <li class="loop-step" style="--c:var(--signal)"><span class="loop-n">SCHRITT 2</span><h3>Planen</h3><ul class="bullets"><li>ein Algorithmus berechnet einen sicheren Weg</li><li>und eine passende Geschwindigkeit</li></ul><a href="#planung">Zur A*-Planung</a></li>
+          <li class="loop-step" style="--c:var(--sens-radar)"><span class="loop-n">SCHRITT 3</span><h3>Handeln</h3><ul class="bullets"><li>Lenkung, Gas und Bremse setzen den Plan um</li><li>die Physik bestimmt, wie schnell das wirkt</li></ul><a href="#bremsen">Zur Brems-Simulation</a></li>
         </ol>
       </div>
       <p class="loop-note"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v4.5h-4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Danach beginnt alles von vorn – viele Male pro Sekunde.</p>
@@ -1119,7 +1134,6 @@ legend{padding:0;margin-bottom:10px}
       </aside>
       <div class="notes">
         <p class="tag-model"><svg aria-hidden="true"><use href="#i-warn"/></svg>Vereinfachte Darstellung der Norm</p>
-        <p class="tag-check"><svg aria-hidden="true"><use href="#i-check"/></svg>Haftung und Zulassung unterscheiden sich je nach Land – Stand vor dem Vortrag prüfen</p>
       </div>
     </div>
   </div>
@@ -1177,27 +1191,27 @@ legend{padding:0;margin-bottom:10px}
     <div class="sensor-cards">
       <article class="scard reveal" data-sensor="cam" style="--c:var(--sens-cam);--d:0">
         <h3>Kamera</h3>
-        <p class="how">Nimmt Bilder auf. Eine KI – ein Programm, das aus vielen Beispielen gelernt hat – erkennt darin Objekte.</p>
-        <dl><dt class="plus">Stärke</dt><dd>Erkennt Farben, Schilder, Ampeln und Markierungen und kann Objekte gut unterscheiden.</dd>
-        <dt class="minus">Schwäche</dt><dd>Braucht Licht und freie Sicht. Nacht, Nebel und Gegenlicht stören. Entfernungen schätzt sie nur indirekt.</dd></dl>
+        <ul class="bullets how"><li>nimmt Bilder auf</li><li>eine KI – ein Programm, das aus vielen Beispielen gelernt hat – erkennt darin Objekte</li></ul>
+        <dl><dt class="plus">Stärke</dt><dd><ul class="bullets"><li>erkennt Farben, Schilder, Ampeln, Markierungen</li><li>unterscheidet Objekte gut</li></ul></dd>
+        <dt class="minus">Schwäche</dt><dd><ul class="bullets"><li>braucht Licht und freie Sicht</li><li>Nacht, Nebel, Gegenlicht stören</li><li>Entfernung nur indirekt</li></ul></dd></dl>
       </article>
       <article class="scard reveal" data-sensor="radar" style="--c:var(--sens-radar);--d:1">
         <h3>Radar</h3>
-        <p class="how">Sendet Funkwellen und misst ihr Echo. Über den Doppler-Effekt – die Frequenz des Echos ändert sich, wenn sich etwas bewegt – misst es auch die Geschwindigkeit.</p>
-        <dl><dt class="plus">Stärke</dt><dd>Funktioniert auch bei Regen, Nebel und Dunkelheit und reicht weit.</dd>
-        <dt class="minus">Schwäche</dt><dd>Grobe Auflösung: Was ein Objekt ist, erkennt es schlecht. Schilder lesen kann es nicht.</dd></dl>
+        <ul class="bullets how"><li>sendet Funkwellen und misst das Echo</li><li>Doppler-Effekt: Das Echo ändert seine Frequenz, wenn sich etwas bewegt – so misst Radar die Geschwindigkeit</li></ul>
+        <dl><dt class="plus">Stärke</dt><dd><ul class="bullets"><li>funktioniert bei Regen, Nebel, Dunkelheit</li><li>große Reichweite</li></ul></dd>
+        <dt class="minus">Schwäche</dt><dd><ul class="bullets"><li>grobe Auflösung</li><li>erkennt schlecht, was ein Objekt ist</li><li>kann keine Schilder lesen</li></ul></dd></dl>
       </article>
       <article class="scard reveal" data-sensor="lidar" style="--c:var(--sens-lidar);--d:2">
         <h3>Lidar</h3>
-        <p class="how">Kurz für „Light Detection and Ranging“: Tastet die Umgebung mit Laserpulsen ab und misst, wie lange das Licht zurück braucht. So entsteht eine 3D-Punktwolke.</p>
-        <dl><dt class="plus">Stärke</dt><dd>Sehr genaue Entfernungen und Formen, auch im Dunkeln.</dd>
-        <dt class="minus">Schwäche</dt><dd>Regen und Nebel streuen das Laserlicht. Farben und Schildinhalte erkennt es nicht.</dd></dl>
+        <ul class="bullets how"><li>kurz für „Light Detection and Ranging“</li><li>tastet mit Laserpulsen ab und misst, wie lange das Licht zurück braucht</li><li>ergibt eine 3D-Punktwolke</li></ul>
+        <dl><dt class="plus">Stärke</dt><dd><ul class="bullets"><li>sehr genaue Entfernungen und Formen</li><li>funktioniert auch im Dunkeln</li></ul></dd>
+        <dt class="minus">Schwäche</dt><dd><ul class="bullets"><li>Regen und Nebel streuen das Laserlicht</li><li>keine Farben, keine Schildinhalte</li></ul></dd></dl>
       </article>
       <article class="scard reveal" data-sensor="us" style="--c:var(--sens-us);--d:3">
         <h3>Ultraschall</h3>
-        <p class="how">Sendet Schallwellen, die für Menschen zu hoch sind, und misst das Echo – ähnlich wie eine Fledermaus.</p>
-        <dl><dt class="plus">Stärke</dt><dd>Günstig und zuverlässig im Nahbereich, etwa beim Einparken.</dd>
-        <dt class="minus">Schwäche</dt><dd>Reicht nur wenige Meter weit und taugt deshalb nicht für schnelle Fahrt.</dd></dl>
+        <ul class="bullets how"><li>sendet Schallwellen, für Menschen zu hoch</li><li>misst das Echo – wie eine Fledermaus</li></ul>
+        <dl><dt class="plus">Stärke</dt><dd><ul class="bullets"><li>günstig</li><li>zuverlässig im Nahbereich, z. B. beim Einparken</li></ul></dd>
+        <dt class="minus">Schwäche</dt><dd><ul class="bullets"><li>nur wenige Meter Reichweite</li><li>ungeeignet für schnelle Fahrt</li></ul></dd></dl>
       </article>
     </div>
     <div class="notes">
@@ -1335,20 +1349,21 @@ legend{padding:0;margin-bottom:10px}
             <h3 id="fTitle">Der Weg bis zum Stillstand</h3>
           </div>
           <dl class="fdefs">
-            <div><dt>Reaktionsweg</dt><dd>Die Strecke, die das Auto fährt, bevor überhaupt gebremst wird – während man erkennt und reagiert.</dd></div>
-            <div><dt>Bremsweg</dt><dd>Die Strecke vom Bremsbeginn bis zum Stillstand.</dd></div>
-            <div><dt>Anhalteweg</dt><dd>Reaktionsweg und Bremsweg zusammen.</dd></div>
+            <div><dt>Reaktionsweg</dt><dd>Strecke bis zum Bremsbeginn – während man erkennt und reagiert</dd></div>
+            <div><dt>Bremsweg</dt><dd>Strecke vom Bremsbeginn bis zum Stillstand</dd></div>
+            <div><dt>Anhalteweg</dt><dd>Reaktionsweg + Bremsweg</dd></div>
           </dl>
           <div class="fbox">
             <p><span class="fl">Reaktionsweg</span><code>(v/10)·3</code><b id="fR">15 m</b></p>
             <p><span class="fl">Bremsweg</span><code id="fBc">(v/10)²</code><b id="fB">25 m</b></p>
             <p class="tot"><span class="fl">Anhalteweg</span><code>Summe</code><b id="fA">40 m</b></p>
           </div>
-          <p class="small">v in km/h, Ergebnis in Metern – hier für <b id="fV">50 km/h, trocken</b>. Die Reaktions-Faustformel entspricht etwa 1 Sekunde Reaktionszeit. Bei einer Gefahrenbremsung ist der Bremsweg laut Faustformel etwa halb so lang.</p>
-          <ul class="assume">
-            <li><strong>Nasse Fahrbahn:</strong> Bremsweg × 1,5, weil die Reifen schlechter haften (Annahme im Modell).</li>
-            <li><strong>Computer:</strong> 0,2 s Reaktionszeit (Annahme im Modell).</li>
-            <li><strong>Du:</strong> Dein Reaktionsweg wird mit deiner gemessenen Zeit berechnet: Geschwindigkeit × Zeit. Im echten Auto dauert es länger als ein Klick – der Fuß muss erst zur Bremse.</li>
+          <ul class="bullets small"><li>v in km/h, Ergebnis in Metern – hier für <b id="fV">50 km/h, trocken</b></li><li>Reaktions-Faustformel ≈ 1 Sekunde Reaktionszeit</li><li>Gefahrenbremsung: Bremsweg etwa halb so lang</li></ul>
+          <ul class="bullets assume">
+            <li><strong>Nasse Fahrbahn:</strong> Bremsweg × 1,5 (Annahme im Modell)</li>
+            <li><strong>Computer:</strong> 0,2 s Reaktionszeit (Annahme im Modell)</li>
+            <li><strong>Du:</strong> Reaktionsweg = Tempo × gemessene Zeit</li>
+            <li>im echten Auto dauert es länger: Fuß muss zur Bremse</li>
           </ul>
         </aside>
       </div>
@@ -1469,11 +1484,11 @@ legend{padding:0;margin-bottom:10px}
             <span class="motive-icon warn" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M14 4v12" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="14" cy="21.5" r="1.8" fill="currentColor"/></svg></span>
             <span class="tagline">Technik</span>
             <h3>Seltene Situationen</h3>
-            <p>Sogenannte Edge Cases sind ungewöhnliche Fälle, die kaum jemand vorhersieht: ein Mensch im Kostüm, ein Sofa auf der Fahrbahn, eine Polizistin, die den Verkehr per Hand regelt.</p>
+            <ul class="bullets"><li>ungewöhnliche Fälle, sogenannte Edge Cases</li><li>z. B. Mensch im Kostüm, Sofa auf der Fahrbahn</li><li>Polizei regelt den Verkehr per Hand</li></ul>
           </div>
           <div class="motive-face back" id="cb-1" inert>
             <p class="kicker">Lösungsansätze · Seltene Situationen</p>
-            <p>Sehr viele Testkilometer sammeln, auch in Computersimulationen, und das System mit Daten aus echten Fahrten weiter trainieren.</p>
+            <ul class="bullets"><li>sehr viele Testkilometer, auch in Simulationen</li><li>mit echten Fahrdaten weiter trainieren</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="cb-1"><span>Lösungsansätze zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -1484,11 +1499,11 @@ legend{padding:0;margin-bottom:10px}
             <span class="motive-icon warn" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M8 17.5a5 5 0 0 1 .5-10 6.5 6.5 0 0 1 12.4 1.4 4.3 4.3 0 0 1-.4 8.6Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M10 21l-1 3M15 21l-1 3M20 21l-1 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
             <span class="tagline">Technik</span>
             <h3>Wetter</h3>
-            <p>Schnee, Starkregen und Nebel stören die Sensoren. Fahrbahnmarkierungen können unter Schnee oder Laub verschwinden.</p>
+            <ul class="bullets"><li>Schnee, Starkregen, Nebel stören die Sensoren</li><li>Markierungen unter Schnee oder Laub verdeckt</li></ul>
           </div>
           <div class="motive-face back" id="cb-2" inert>
             <p class="kicker">Lösungsansätze · Wetter</p>
-            <p>Mehrere Sensorarten kombinieren, Sensoren beheizen und reinigen – und im Zweifel langsamer fahren oder sicher anhalten.</p>
+            <ul class="bullets"><li>mehrere Sensorarten kombinieren</li><li>Sensoren beheizen und reinigen</li><li>im Zweifel langsamer fahren oder anhalten</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="cb-2"><span>Lösungsansätze zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -1499,11 +1514,11 @@ legend{padding:0;margin-bottom:10px}
             <span class="motive-icon warn" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="6" y="12.5" width="16" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9.5 12.5V9a4.5 4.5 0 0 1 9 0v3.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="18" r="1.7" fill="currentColor"/></svg></span>
             <span class="tagline">Sicherheit</span>
             <h3>Cybersicherheit</h3>
-            <p>Ein vernetztes Auto ist ein Computer auf Rädern. Angreifer könnten versuchen, über Funkverbindungen oder Software-Updates einzudringen.</p>
+            <ul class="bullets"><li>vernetztes Auto ist ein Computer auf Rädern</li><li>Angriffe über Funk oder Software-Updates möglich</li></ul>
           </div>
           <div class="motive-face back" id="cb-3" inert>
             <p class="kicker">Lösungsansätze · Cybersicherheit</p>
-            <p>Verbindungen verschlüsseln, wichtige Systeme im Auto voneinander trennen und Sicherheitslücken mit Updates schnell schließen.</p>
+            <ul class="bullets"><li>Verbindungen verschlüsseln</li><li>wichtige Systeme trennen</li><li>Lücken schnell per Update schließen</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="cb-3"><span>Lösungsansätze zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -1514,11 +1529,11 @@ legend{padding:0;margin-bottom:10px}
             <span class="motive-icon warn" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M3 14s4-7 11-7 11 7 11 7-4 7-11 7S3 14 3 14Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="14" cy="14" r="3.2" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></span>
             <span class="tagline">Gesellschaft</span>
             <h3>Datenschutz</h3>
-            <p>Kameras und Ortung erfassen ständig Daten – auch über Menschen, die nur zufällig am Straßenrand stehen.</p>
+            <ul class="bullets"><li>Kameras und Ortung erfassen ständig Daten</li><li>auch von unbeteiligten Personen am Straßenrand</li></ul>
           </div>
           <div class="motive-face back" id="cb-4" inert>
             <p class="kicker">Lösungsansätze · Datenschutz</p>
-            <p>Nur so viele Daten erheben wie nötig, Gesichter und Kennzeichen unkenntlich machen und Daten nicht länger als nötig speichern.</p>
+            <ul class="bullets"><li>nur nötige Daten erheben</li><li>Gesichter und Kennzeichen unkenntlich machen</li><li>Daten nicht länger als nötig speichern</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="cb-4"><span>Lösungsansätze zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -1529,11 +1544,11 @@ legend{padding:0;margin-bottom:10px}
             <span class="motive-icon warn" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M14 4v20M7 24h14M5 9h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M5 9l-3 7h6Zm18 0-3 7h6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
             <span class="tagline">Gesellschaft</span>
             <h3>Recht</h3>
-            <p>Gesetze müssen klären, wann ein System fahren darf und wer haftet. Das ist von Land zu Land verschieden.</p>
+            <ul class="bullets"><li>Wann darf ein System fahren?</li><li>Wer haftet bei einem Unfall?</li><li>Regeln sind von Land zu Land verschieden</li></ul>
           </div>
           <div class="motive-face back" id="cb-5" inert>
             <p class="kicker">Lösungsansätze · Recht</p>
-            <p>Deutschland erlaubt seit 2021 Fahrzeuge der Stufe 4 in festgelegten Betriebsbereichen – mit einer „Technischen Aufsicht“, die aus der Ferne eingreifen kann.</p>
+            <ul class="bullets"><li>Deutschland erlaubt seit 2021 Stufe 4 in festgelegten Bereichen</li><li>mit einer „Technischen Aufsicht“, die aus der Ferne eingreift</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="cb-5"><span>Lösungsansätze zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -1544,11 +1559,11 @@ legend{padding:0;margin-bottom:10px}
             <span class="motive-icon warn" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M9 13V7.5a2 2 0 0 1 4 0V12m0-1.5V6a2 2 0 0 1 4 0v6m0-3.5a2 2 0 0 1 4 0V16a8 8 0 0 1-8 8h-1.5a7 7 0 0 1-5.6-2.8L4.4 17a2 2 0 0 1 3.1-2.5L9 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <span class="tagline">Gesellschaft</span>
             <h3>Akzeptanz</h3>
-            <p>Viele Menschen zögern, die Kontrolle an einen Computer abzugeben – besonders nach Berichten über Unfälle mit Testfahrzeugen.</p>
+            <ul class="bullets"><li>viele zögern, die Kontrolle abzugeben</li><li>besonders nach Unfällen mit Testfahrzeugen</li></ul>
           </div>
           <div class="motive-face back" id="cb-6" inert>
             <p class="kicker">Lösungsansätze · Akzeptanz</p>
-            <p>Offen über Tests und Fehler berichten, Entscheidungen nachvollziehbar machen und Vertrauen durch gute Erfahrungen im Alltag aufbauen.</p>
+            <ul class="bullets"><li>offen über Tests und Fehler berichten</li><li>Entscheidungen nachvollziehbar machen</li><li>Vertrauen durch gute Erfahrungen</li></ul>
           </div>
         </div>
         <button class="motive-flip" type="button" aria-expanded="false" aria-controls="cb-6"><span>Lösungsansätze zeigen</span><svg width="14" height="14" aria-hidden="true"><use href="#i-chev"/></svg></button>
@@ -1562,19 +1577,16 @@ legend{padding:0;margin-bottom:10px}
           <svg viewBox="0 0 72 72" aria-hidden="true"><rect x="22" y="8" width="28" height="56" rx="10" fill="#FFD23F"/><path d="M26 22q10-6 20 0l-2 8q-8-4-16 0z" fill="#1C2128"/><rect x="27" y="48" width="18" height="6" rx="2" fill="#1C2128" opacity=".75"/><circle cx="36" cy="36" r="5" fill="#1C2128"/><circle cx="36" cy="36" r="5" fill="none" stroke="#FFD23F" stroke-width="1.5"/><path d="M36 4c8 0 14 3 18 8M36 4c-8 0-14 3-18 8" fill="none" stroke="#5AA9FF" stroke-width="2" stroke-linecap="round" opacity=".8"/></svg>
           <div>
             <h4>Robotaxis</h4>
-            <p>Fahrerlose Taxis, die man per App bestellt. In einigen Städten, zum Beispiel in den USA und in China, sind sie bereits ohne Person am Steuer unterwegs.</p>
+            <ul class="bullets"><li>fahrerlose Taxis, per App bestellt</li><li>teils schon im Einsatz, z. B. in den USA und China</li></ul>
           </div>
         </article>
         <article class="chance reveal" style="--d:1">
           <svg viewBox="0 0 72 72" aria-hidden="true"><rect x="12" y="16" width="48" height="40" rx="9" fill="#EEEBE4"/><rect x="17" y="21" width="17" height="15" rx="3" fill="#1C2128"/><rect x="38" y="21" width="17" height="15" rx="3" fill="#1C2128"/><rect x="31" y="40" width="10" height="16" rx="1.5" fill="#5AA9FF"/><circle cx="22" cy="58" r="5" fill="#1C2128"/><circle cx="50" cy="58" r="5" fill="#1C2128"/><path d="M24 10h24" stroke="#FFD23F" stroke-width="3" stroke-linecap="round"/></svg>
           <div>
             <h4>Autonome Shuttles</h4>
-            <p>Kleine fahrerlose Busse auf festen Strecken, zum Beispiel als Zubringer zum Bahnhof. In Deutschland laufen dazu vor allem Pilotprojekte.</p>
+            <ul class="bullets"><li>kleine fahrerlose Busse auf festen Strecken</li><li>z. B. als Zubringer zum Bahnhof</li><li>in Deutschland vor allem Pilotprojekte</li></ul>
           </div>
         </article>
-      </div>
-      <div class="notes" style="margin-top:4px">
-        <p class="tag-check"><svg aria-hidden="true"><use href="#i-check"/></svg>Aktuelle Entwicklungen und gesetzlicher Stand – vor dem Vortrag prüfen</p>
       </div>
     </div>
   </div>
@@ -1608,15 +1620,15 @@ legend{padding:0;margin-bottom:10px}
     <ol class="takeaways">
       <li class="takeaway reveal" style="--d:0">
         <span class="diamond" aria-hidden="true"><span>1</span></span>
-        <div><h3>Wahrnehmen → Planen → Handeln.</h3><p>Ein selbstfahrendes Auto wiederholt diesen Kreislauf ständig: Sensoren erfassen die Umgebung, Algorithmen wie A* planen den Weg, Lenkung, Gas und Bremse setzen ihn um.</p></div>
+        <div><h3>Wahrnehmen → Planen → Handeln.</h3><ul class="bullets"><li>Sensoren erfassen die Umgebung</li><li>Algorithmen wie A* planen den Weg</li><li>Lenkung, Gas und Bremse setzen ihn um</li><li>und das ständig von vorn</li></ul></div>
       </li>
       <li class="takeaway reveal" style="--d:1">
         <span class="diamond" aria-hidden="true"><span>2</span></span>
-        <div><h3>Sensorfusion und KI machen es möglich, aber nicht perfekt.</h3><p>Jeder Sensor hat Schwächen. Erst zusammen entsteht ein verlässliches Bild – und auch das hat Grenzen, etwa bei Nebel oder in seltenen Situationen.</p></div>
+        <div><h3>Sensorfusion und KI machen es möglich, aber nicht perfekt.</h3><ul class="bullets"><li>jeder Sensor hat Schwächen</li><li>erst zusammen entsteht ein verlässliches Bild</li><li>Grenzen bleiben, z. B. bei Nebel oder seltenen Situationen</li></ul></div>
       </li>
       <li class="takeaway reveal" style="--d:2">
         <span class="diamond" aria-hidden="true"><span>3</span></span>
-        <div><h3>Die Technik ist weiter als Regeln, Ethik und Recht.</h3><p>Wer haftet? Wie soll ein Auto im Ernstfall entscheiden? Diese Fragen kann die Technik nicht allein beantworten – das muss die Gesellschaft tun.</p></div>
+        <div><h3>Die Technik ist weiter als Regeln, Ethik und Recht.</h3><ul class="bullets"><li>Wer haftet?</li><li>Wie soll ein Auto im Ernstfall entscheiden?</li><li>das muss die Gesellschaft beantworten, nicht die Technik</li></ul></div>
       </li>
     </ol>
 
@@ -1630,14 +1642,6 @@ legend{padding:0;margin-bottom:10px}
           <li><cite>The Moral Machine experiment</cite><span class="pub">Awad u. a., Nature, 2018</span></li>
         </ol>
       </section>
-      <aside class="checklist reveal" aria-labelledby="chkTitle">
-        <h3 id="chkTitle"><svg width="22" height="22" aria-hidden="true"><use href="#i-check"/></svg>Vor dem Vortrag prüfen</h3>
-        <ul>
-          <li><a href="#warum">Kapitel 2:</a> Anteil menschlicher Fehler am Unfallgeschehen</li>
-          <li><a href="#stufen">Kapitel 3:</a> Haftung und Zulassung der Stufen</li>
-          <li><a href="#ausblick">Kapitel 8:</a> Rechtslage, Robotaxis und Shuttles</li>
-        </ul>
-      </aside>
     </div>
 
     <div class="closing reveal">
